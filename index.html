@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Creator IA</title>
+<style>
+:root{--bg:#0b1020;--card:#151d30;--line:#293650;--text:#f4f7ff;--muted:#a7b2c8;--blue:#6d7cff;--green:#32cf99}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:24px 18px;background:#111a2d;border-bottom:1px solid var(--line)}
+h1{margin:0;font-size:27px}header p{color:var(--muted);margin-bottom:0}
+main{max-width:1000px;margin:auto;padding:18px}
+nav{display:flex;gap:8px;overflow:auto;margin-bottom:20px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 14px;background:var(--blue);color:white;font-weight:bold}
+nav button{white-space:nowrap;background:var(--card);border:1px solid var(--line)}
+nav button.active{background:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);padding:17px;border-radius:14px;margin-bottom:14px}
+.metric{font-size:29px;font-weight:bold;margin:8px 0}
+.muted{color:var(--muted);font-size:14px}
+h2{font-size:21px;margin:0 0 15px}h3{margin:8px 0}
+.section{display:none}.section.active{display:block}
+form{display:grid;gap:10px;margin-bottom:18px}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:#0c1425;color:white}
+textarea{min-height:80px;resize:vertical}
+.item{padding:13px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.item:last-child{border-bottom:0}
+.item button{margin:5px 5px 0 0;padding:8px 10px;font-size:12px}
+.secondary{background:#35415a}.danger{background:#b84455}.done{text-decoration:line-through;opacity:.6}
+.tag{display:inline-block;background:#28355a;color:#cbd4ff;border-radius:20px;padding:5px 9px;font-size:12px}
+.agent{border-top:3px solid var(--blue)}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
+@media(min-width:650px){.layout{display:grid;grid-template-columns:1fr 1fr;gap:15px}.layout .card{margin-bottom:0}}
+</style>
+</head>
+<body>
+<header>
+<h1>✨ Creator IA</h1>
+<p>Sua central de criação e gestão digital</p>
+</header>
+<main>
+<nav>
+<button class="active" data-tab="inicio">🏠 Início</button>
+<button data-tab="agentes">🤖 Agentes</button>
+<button data-tab="clientes">👥 Clientes</button>
+<button data-tab="projetos">📁 Projetos</button>
+<button data-tab="tarefas">✅ Tarefas</button>
+</nav>
+
+<section id="inicio" class="section active">
+<h2>Painel geral</h2>
+<div class="grid">
+<div class="card"><div class="muted">Agentes</div><div class="metric">4</div></div>
+<div class="card"><div class="muted">Clientes</div><div class="metric" id="mClientes">0</div></div>
+<div class="card"><div class="muted">Projetos</div><div class="metric" id="mProjetos">0</div></div>
+<div class="card"><div class="muted">Tarefas abertas</div><div class="metric" id="mTarefas">0</div></div>
+</div>
+<div class="layout" style="margin-top:15px">
+<div class="card"><h2>Comece aqui</h2>
+<p class="muted">1. Cadastre seu cliente.<br>2. Registre o projeto.<br>3. Crie tarefas para executar.<br>4. Acompanhe seu progresso.</p>
+<button onclick="tab('clientes')">+ Novo cliente</button>
+<button onclick="tab('projetos')">+ Novo projeto</button>
+</div>
+<div class="card"><h2>Atividade recente</h2><div id="recentes" class="muted">Seus projetos e tarefas aparecerão aqui.</div></div>
+</div>
+</section>
+
+<section id="agentes" class="section">
+<h2>Seus quatro agentes</h2>
+<div class="grid">
+<div class="card agent"><div style="font-size:30px">🧭</div><h3>Agente Gestor</h3><p class="muted">Organiza clientes, projetos, prioridades e planejamento.</p><button onclick="usar('Gestor')">Ver função</button></div>
+<div class="card agent"><div style="font-size:30px">🌐</div><h3>Agente de Sites</h3><p class="muted">Ajuda a planejar sites para lojas, padarias e comércios.</p><button onclick="usar('Sites')">Ver função</button></div>
+<div class="card agent"><div style="font-size:30px">✍️</div><h3>Agente de Conteúdo</h3><p class="muted">Planeja textos, anúncios, roteiros e publicações.</p><button onclick="usar('Conteúdo')">Ver função</button></div>
+<div class="card agent"><div style="font-size:30px">🎨</div><h3>Agente Criativo</h3><p class="muted">Prepara ideias e prompts para imagens e vídeos com IA.</p><button onclick="usar('Criativo')">Ver função</button></div>
+</div>
+<div class="card"><h3 id="agTitulo">Escolha um agente</h3><p id="agTexto" class="muted">Cada agente tem uma função definida. Esta versão organiza o trabalho, mas não chama um modelo de IA.</p></div>
+</section>
+
+<section id="clientes" class="section">
+<h2>👥 Gestão de clientes</h2>
+<div class="card"><form id="formCliente">
+<input name="nome" placeholder="Nome do cliente ou empresa" required>
+<input name="contato" placeholder="Telefone, WhatsApp ou e-mail">
+<input name="servico" placeholder="Serviço desejado (ex.: criação de site)">
+<button type="submit">+ Cadastrar cliente</button>
+</form></div>
+<div class="card"><h3>Lista de clientes</h3><div id="listaClientes"></div></div>
+</section>
+
+<section id="projetos" class="section">
+<h2>📁 Gestão de projetos</h2>
+<div class="card"><form id="formProjeto">
+<input name="nome" placeholder="Nome do projeto" required>
+<input name="cliente" placeholder="Cliente relacionado (opcional)">
+<textarea name="descricao" placeholder="Descrição do trabalho"></textarea>
+<select name="status"><option>Planejamento</option><option>Em andamento</option><option>Concluído</option></select>
+<button type="submit">+ Criar projeto</button>
+</form></div>
+<div class="card"><h3>Seus projetos</h3><div id="listaProjetos"></div></div>
+</section>
+
+<section id="tarefas" class="section">
+<h2>✅ Lista de tarefas</h2>
+<div class="card"><form id="formTarefa">
+<input name="titulo" placeholder="O que precisa ser feito?" required>
+<input name="projeto" placeholder="Projeto relacionado (opcional)">
+<select name="prioridade"><option>Normal</option><option>Alta</option><option>Baixa</option></select>
+<button type="submit">+ Adicionar tarefa</button>
+</form></div>
+<div class="card"><h3>Suas tarefas</h3><div id="listaTarefas"></div></div>
+</section>
+</main>
+<footer>Creator IA · Painel de gestão · Dados salvos neste navegador</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const load=k=>{try{return JSON.parse(localStorage.getItem('creator_'+k))||[]}catch(e){return []}};
+const save=(k,v)=>{try{localStorage.setItem('creator_'+k,JSON.stringify(v));return true}catch(e){alert('Não foi possível salvar. Verifique o armazenamento do navegador.');return false}};
+let clientes=load('clientes'),projetos=load('projetos'),tarefas=load('tarefas');
+function tab(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+function usar(nome){
+const textos={
+'Gestor':'Organiza prioridades, acompanha os resultados e ajuda a planejar o trabalho.',
+'Sites':'Planeja páginas, estrutura menus, formulários, cardápios e sites comerciais.',
+'Conteúdo':'Elabora ideias de anúncios, textos para redes sociais e roteiros de vídeos.',
+'Criativo':'Desenvolve conceitos visuais e prompts para ferramentas de imagem e vídeo.'
+};
+$('agTitulo').textContent='Agente '+nome;
+$('agTexto').textContent=textos[nome];
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function persistir(){
+save('clientes',clientes);save('projetos',projetos);save('tarefas',tarefas);render();
+}
+function remover(tipo,id){
+if(!confirm('Deseja excluir este registro?'))return;
+if(tipo==='cliente')clientes=clientes.filter(x=>x.id!==id);
+if(tipo==='projeto')projetos=projetos.filter(x=>x.id!==id);
+if(tipo==='tarefa')tarefas=tarefas.filter(x=>x.id!==id);
+persistir();
+}
+function render(){
+$('mClientes').textContent=clientes.length;
+$('mProjetos').textContent=projetos.length;
+$('mTarefas').textContent=tarefas.filter(t=>!t.done).length;
+$('listaClientes').innerHTML=clientes.map(c=>`<div class="item"><b>${esc(c.nome)}</b><p class="muted">${esc(c.contato)} · ${esc(c.servico)}</p><button class="danger" onclick="remover('cliente',${c.id})">Excluir</button></div>`).join('')||'<p class="muted">Nenhum cliente cadastrado.</p>';
+$('listaProjetos').innerHTML=projetos.map(p=>`<div class="item"><b>${esc(p.nome)}</b><p class="muted">${esc(p.cliente)} · ${esc(p.descricao)}</p><label class="muted">Status: </label><select onchange="statusProjeto(${p.id},this.value)">${['Planejamento','Em andamento','Concluído'].map(s=>`<option ${p.status===s?'selected':''}>${s}</option>`).join('')}</select><p><button class="danger" onclick="remover('projeto',${p.id})">Excluir</button></p></div>`).join('')||'<p class="muted">Nenhum projeto criado.</p>';
+$('listaTarefas').innerHTML=tarefas.map(t=>`<div class="item ${t.done?'done':''}"><b>${esc(t.titulo)}</b><p class="muted">Projeto: ${esc(t.projeto||'Não informado')} · Prioridade: ${esc(t.prioridade)}</p><button onclick="concluir(${t.id})">${t.done?'Reabrir':'Concluir'}</button><button class="danger" onclick="remover('tarefa',${t.id})">Excluir</button></div>`).join('')||'<p class="muted">Nenhuma tarefa criada.</p>';
+const recent=[...projetos.map(p=>'📁 '+p.nome),...tarefas.slice(-3).map(t=>'✅ '+t.titulo)].slice(-5);
+$('recentes').innerHTML=recent.map(x=>'<div class="item">'+esc(x)+'</div>').join('')||'Seus projetos e tarefas aparecerão aqui.';
+}
+function statusProjeto(id,status){let p=projetos.find(x=>x.id===id);if(p){p.status=status;persistir()}}
+function concluir(id){let t=tarefas.find(x=>x.id===id);if(t){t.done=!t.done;persistir()}}
+$('formCliente').onsubmit=e=>{
+e.preventDefault();let f=new FormData(e.target);
+clientes.push({id:Date.now(),nome:f.get('nome').trim(),contato:f.get('contato'),servico:f.get('servico')});
+persistir();e.target.reset();
+};
+$('formProjeto').onsubmit=e=>{
+e.preventDefault();let f=new FormData(e.target);
+projetos.push({id:Date.now(),nome:f.get('nome').trim(),cliente:f.get('cliente'),descricao:f.get('descricao'),status:f.get('status')});
+persistir();e.target.reset();
+};
+$('formTarefa').onsubmit=e=>{
+e.preventDefault();let f=new FormData(e.target);
+tarefas.push({id:Date.now(),titulo:f.get('titulo').trim(),projeto:f.get('projeto'),prioridade:f.get('prioridade'),done:false});
+persistir();e.target.reset();
+};
+render();
+</script>
+</body>
+</html>
